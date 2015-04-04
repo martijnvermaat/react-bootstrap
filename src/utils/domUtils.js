@@ -1,11 +1,21 @@
 /**
+ * Get elements owner document
+ *
+ * @param {HTMLElement?} elem
+ * @returns {HTMLElement}
+ */
+function ownerDocument(elem) {
+  return (elem && elem.ownerDocument) || document;
+}
+
+/**
  * Shortcut to compute element style
  *
  * @param {HTMLElement} elem
  * @returns {CssStyle}
  */
 function getComputedStyles(elem) {
-  return elem.ownerDocument.defaultView.getComputedStyle(elem, null);
+  return ownerDocument(elem).defaultView.getComputedStyle(elem, null);
 }
 
 /**
@@ -21,7 +31,7 @@ function getOffset(DOMNode) {
     return window.jQuery(DOMNode).offset();
   }
 
-  let docElem = DOMNode.ownerDocument.documentElement;
+  let docElem = ownerDocument(DOMNode).documentElement;
   let box = { top: 0, left: 0 };
 
   // If we don't have gBCR, just use 0,0 rather than error
@@ -89,7 +99,7 @@ function getPosition(elem, offsetParent) {
  * @returns {HTMLElement}
  */
 function offsetParentFunc(elem) {
-  let docElem = elem.ownerDocument.documentElement;
+  let docElem = ownerDocument(elem).documentElement;
   let offsetParent = elem.offsetParent || docElem;
 
   while ( offsetParent && ( offsetParent.nodeName !== 'HTML' &&
@@ -101,6 +111,7 @@ function offsetParentFunc(elem) {
 }
 
 export default {
+  ownerDocument: ownerDocument,
   getComputedStyles: getComputedStyles,
   getOffset: getOffset,
   getPosition: getPosition,
