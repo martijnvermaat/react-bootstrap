@@ -7,6 +7,7 @@ import Collapse from './Collapse';
 let Panel = React.createClass({
 
   propTypes: {
+    onExited: React.PropTypes.func,
     collapsible: React.PropTypes.bool,
     onSelect: React.PropTypes.func,
     header: React.PropTypes.node,
@@ -19,7 +20,31 @@ let Panel = React.createClass({
     expanded: React.PropTypes.bool,
     eventKey: React.PropTypes.any,
     headerRole: React.PropTypes.string,
-    panelRole: React.PropTypes.string
+    panelRole: React.PropTypes.string,
+
+    /**
+     * Callback fired before the component expands
+     */
+    onEnter: React.PropTypes.func,
+    /**
+     * Callback fired after the component starts to expand
+     */
+    onEntering: React.PropTypes.func,
+    /**
+     * Callback fired after the component has expanded
+     */
+    onEntered: React.PropTypes.func,
+    /**
+     * Callback fired before the component collapses
+     */
+    onExit: React.PropTypes.func,
+    /**
+     * Callback fired after the component starts to collapse
+     */
+    onExiting: React.PropTypes.func
+    /**
+     * Callback fired after the component has collapsed
+     */
   },
 
   getDefaultProps() {
@@ -70,6 +95,15 @@ let Panel = React.createClass({
   },
 
   renderCollapsibleBody(panelRole) {
+    let collapseProps = {
+      onEnter: this.props.onEnter,
+      onEntering: this.props.onEntering,
+      onEntered: this.props.onEntered,
+      onExit: this.props.onExit,
+      onExiting: this.props.onExiting,
+      onExited: this.props.onExited,
+      in: this.isExpanded()
+    };
     let props = {
       className: bootstrapUtils.prefix(this.props, 'collapse'),
       id: this.props.id,
@@ -81,7 +115,7 @@ let Panel = React.createClass({
     }
 
     return (
-      <Collapse in={this.isExpanded()}>
+      <Collapse {...collapseProps}>
         <div {...props}>
           {this.renderBody()}
 
